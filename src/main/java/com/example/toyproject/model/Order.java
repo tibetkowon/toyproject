@@ -14,5 +14,6 @@ public class Order extends BaseEntity {
     private String customerName;
 
     @ManyToOne
+    @JoinColumn(name = "RESTAURANT_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_RESTAURANT_ID"))
     private Restaurant restaurant;
 }

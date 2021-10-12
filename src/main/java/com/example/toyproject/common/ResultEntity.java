@@ -24,4 +24,9 @@ public class ResultEntity<T> {
         this.code = code;
         this.message = message;
     }
+
+    public ResultEntity(ResponseCode responseCode){
+        this.code = responseCode.getCode();
+        this.message = responseCode.getMessage();
+    }
 }

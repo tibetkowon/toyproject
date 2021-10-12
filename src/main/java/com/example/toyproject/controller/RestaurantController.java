@@ -1,5 +1,6 @@
 package com.example.toyproject.controller;
 
+import com.example.toyproject.common.ResponseCode;
 import com.example.toyproject.common.ResultEntity;
 import com.example.toyproject.entity.Restaurant;
 import com.example.toyproject.services.restaurant.RestaurantService;
@@ -21,36 +22,33 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public ResponseEntity<ResultEntity> insert(@RequestBody Restaurant restaurant){
+    public ResultEntity<Restaurant> insert(@RequestBody Restaurant restaurant){
         log.info("Restaurant insert start -----");
-        //값 확인해?
-        ResultEntity result = service.insert(restaurant);
-
-        log.info("Restaurant insert end -----");
-        return ResponseEntity.ok(result);
+        return service.insert(restaurant);
     }
 
     @GetMapping
-    public ResponseEntity<ResultEntity<List<Restaurant>>> selectAll(){
-       List<Restaurant> result = service.selectAll();
-       return result;
+    public ResultEntity<List<Restaurant>> selectAll(){
+        log.info("Restaurant selectAll start -----");
+        return service.selectAll();
     }
 
     @GetMapping("/{id}")
-    public Restaurant selectOne(@PathVariable(name = "id") Long id){
+    public ResultEntity<Restaurant> selectOne(@PathVariable(name = "id") Long id){
+        log.info("Restaurant selectAll start -----");
         return service.selectOne(id);
     }
 
     @PutMapping("/{id}")
-    public String updateByName(@PathVariable(name = "id") Long id,
+    public ResultEntity<Restaurant> update(@PathVariable(name = "id") Long id,
                          @RequestBody Restaurant restaurant){
-        service.update(id,restaurant);
-            return "OK";
+        log.info("Restaurant update start -----");
+        return service.update(id,restaurant);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteByName(@PathVariable(name = "id") Long id){
-        service.delete(id);
-        return "OK";
+    public ResultEntity<Restaurant> delete(@PathVariable(name = "id") Long id){
+        log.info("Restaurant delete start -----");
+        return service.delete(id);
     }
 }

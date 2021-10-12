@@ -13,6 +13,8 @@ public enum ResponseCode {
     ,RESTAURANT_NO_ADDRESS("1003", "식당 주소가 비어 있습니다.")
     ,RESTAURANT_NO_PHONENUM("1004", "식당 번호가 비어 있습니다.")
 
+    ,RESTAURANT_NO_RESTAURANT("1005","식당이 존재하지 않습니다.")
+
 
     ,ERROR("9999","error")
     ,;

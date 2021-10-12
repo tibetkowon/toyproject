@@ -5,15 +5,18 @@ import com.example.toyproject.common.ResultEntity;
 import com.example.toyproject.entity.Restaurant;
 import com.example.toyproject.repositories.restaurant.RestaurantRepository;
 import com.example.toyproject.services.common.BaseServiceImpl;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 public class RestaurantServiceImpl extends BaseServiceImpl<Restaurant> implements RestaurantService {
 
     private RestaurantRepository repository;
@@ -22,66 +25,77 @@ public class RestaurantServiceImpl extends BaseServiceImpl<Restaurant> implement
         super(repository);
         this.repository = repository;
     }
-
-    @Override
-    public boolean validate(Restaurant restaurant) {
-
-        return true;
-    }
-
     @Override
     public ResultEntity<Restaurant> insert(Restaurant restaurant) {
         ResultEntity<Restaurant> resultEntity;
-        try{
-            resultEntity = new ResultEntity(repository.save(restaurant));
 
-        } catch(DataIntegrityViolationException e){
-            if(repository.findByName(restaurant.getName()).isPresent()){
-                resultEntity = new ResultEntity(ResponseCode.RESTAURANT_PRESENT_NAME.getCode(), ResponseCode.RESTAURANT_PRESENT_NAME.getMessage());
-
-            } else if(restaurant.getName() == null || restaurant.getName().isEmpty()){
-                resultEntity = new ResultEntity(ResponseCode.RESTAURANT_NO_NAME.getCode(), ResponseCode.RESTAURANT_NO_NAME.getMessage());
-
-            } else if(restaurant.getAddress() == null || restaurant.getAddress().isEmpty()){
-                resultEntity = new ResultEntity(ResponseCode.RESTAURANT_NO_ADDRESS.getCode(), ResponseCode.RESTAURANT_NO_ADDRESS.getMessage());
-
-            } else if(restaurant.getPhoneNum() == null || restaurant.getPhoneNum().isEmpty()){
-                resultEntity = new ResultEntity(ResponseCode.RESTAURANT_NO_PHONENUM.getCode(), ResponseCode.RESTAURANT_NO_PHONENUM.getMessage());
-
-            } else {
-                resultEntity = new ResultEntity(ResponseCode.ERROR.getCode(),ResponseCode.ERROR.getMessage());
-            }
-        } catch(Exception e){
-            log.error(e.getMessage());
-            throw e;
+        if(restaurant.getName() == null || restaurant.getName().isEmpty()){
+            resultEntity = new ResultEntity<>(ResponseCode.RESTAURANT_NO_NAME);
+        } else if(restaurant.getAddress() == null || restaurant.getAddress().isEmpty()){
+            resultEntity = new ResultEntity<>(ResponseCode.RESTAURANT_NO_ADDRESS);
+        } else if(restaurant.getPhoneNum() == null || restaurant.getPhoneNum().isEmpty()){
+            resultEntity = new ResultEntity<>(ResponseCode.RESTAURANT_NO_PHONENUM);
+        } else if(repository.findByName(restaurant.getName()).isPresent()){
+            resultEntity = new ResultEntity<>(ResponseCode.RESTAURANT_PRESENT_NAME);
+        } else {
+            resultEntity = new ResultEntity<>(repository.save(restaurant));
         }
+        log.info("Restaurant insert end -----");
         return resultEntity;
     }
 
     @Override
+    public ResultEntity<List<Restaurant>> selectAll() {
+        log.info("Restaurant selectAll end -----");
+        return new ResultEntity<>(repository.findAll());
+    }
+
+    @Override
+    public ResultEntity<Restaurant> selectOne(Long id) {
+        Optional<Restaurant> optionalRestaurant = repository.findById(id);
+
+        if(!optionalRestaurant.isPresent()){
+            return new ResultEntity<>(ResponseCode.RESTAURANT_NO_RESTAURANT);
+        }
+
+        log.info("Restaurant selectOne end -----");
+
+        return new ResultEntity<>(optionalRestaurant.get());
+    }
+
+
+    @Override
     @Transactional
-    public List<Restaurant> selectAll() {
-        return repository.findAll();
+    public ResultEntity<Restaurant> update(Long id, Restaurant restaurant) {
+        Optional<Restaurant> optionalRestaurant = repository.findById(id);
+
+        if(!optionalRestaurant.isPresent()){
+            return new ResultEntity<>(ResponseCode.RESTAURANT_NO_RESTAURANT);
+        }
+
+        Restaurant getRestaurant = optionalRestaurant.get();
+        getRestaurant.modify(restaurant);
+
+        log.info("Restaurant update end -----");
+
+        return new ResultEntity<>(getRestaurant);
     }
 
     @Override
-    public Restaurant selectOne(Long id) {
-        return repository.findById(id).orElse(null);
-    }
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ResultEntity<Restaurant> delete(Long id) {
+        Optional<Restaurant> optionalRestaurant = repository.findById(id);
 
+        if(!optionalRestaurant.isPresent()){
+            return new ResultEntity<>(ResponseCode.RESTAURANT_NO_RESTAURANT);
+        }
 
-    //TODO : 업데이트 setter -> 생성자
-    @Override
-    public void update(Long id, Restaurant restaurant) {
-        Restaurant getData = repository.findById(id).orElse(new Restaurant());
-        log.info("getData == {}, ID == {}",getData, getData.getId());
+        Restaurant restaurant = optionalRestaurant.get();
+        restaurant.setDeleteFlag(true);
+        //repository.delete(restaurant);
 
+        log.info("Restaurant delete end -----");
 
-        repository.save(getData);
-    }
-
-    @Override
-    public void delete(Long id) {
-        repository.delete(repository.findById(id).get());
+        return new ResultEntity<>(restaurant);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.toyproject.controller;
 
-import com.example.toyproject.model.Order;
-import com.example.toyproject.controller.dto.InsertOrder;
+import com.example.toyproject.entity.Order;
+import com.example.toyproject.controller.dto.InsertOrderDto;
 import com.example.toyproject.services.order.OrderService;
 import com.example.toyproject.services.restaurant.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +25,11 @@ public class OrderController {
 
     @PostMapping
     @SuppressWarnings("rawtypes")
-    public ResponseEntity insert(@RequestBody InsertOrder order){
+    public ResponseEntity insert(@RequestBody InsertOrderDto order){
         log.info("Order Insert!!!!");
         log.info("order == {}", order);
         service.insert(order);
-        return ResponseEntity.ok();
+        return ResponseEntity.ok("");
     }
 
     @GetMapping

@@ -1,9 +1,7 @@
-package com.example.toyproject.model;
+package com.example.toyproject.entity;
 
-import com.example.toyproject.model.common.BaseEntity;
-import lombok.AccessLevel;
+import com.example.toyproject.entity.common.BaseEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import javax.persistence.*;
 import lombok.Getter;

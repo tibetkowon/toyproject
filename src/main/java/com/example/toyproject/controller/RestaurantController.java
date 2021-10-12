@@ -1,9 +1,9 @@
 package com.example.toyproject.controller;
 
-import com.example.toyproject.model.Restaurant;
+import com.example.toyproject.common.ResultEntity;
+import com.example.toyproject.entity.Restaurant;
 import com.example.toyproject.services.restaurant.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,38 +21,36 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public String insert(@RequestBody Restaurant restaurant){
-        log.info("insert in!!!!!");
-        log.info("restaurant == {} ",restaurant);
+    public ResponseEntity<ResultEntity> insert(@RequestBody Restaurant restaurant){
+        log.info("Restaurant insert start -----");
+        //값 확인해?
+        ResultEntity result = service.insert(restaurant);
 
-        service.insert(restaurant);
-        return "OK";
+        log.info("Restaurant insert end -----");
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping
-    public List<Restaurant> selectAll(){
+    public ResponseEntity<ResultEntity<List<Restaurant>>> selectAll(){
        List<Restaurant> result = service.selectAll();
-       log.info("result :: {}", result);
        return result;
     }
 
-    @GetMapping("/{name}")
-    public Restaurant selectOneByName(@PathVariable(name = "name") String name){
-        return service.selectOne(name);
+    @GetMapping("/{id}")
+    public Restaurant selectOne(@PathVariable(name = "id") Long id){
+        return service.selectOne(id);
     }
 
-    @PutMapping("/{name}")
-    public String updateByName(@PathVariable String name,
+    @PutMapping("/{id}")
+    public String updateByName(@PathVariable(name = "id") Long id,
                          @RequestBody Restaurant restaurant){
-        log.info("name == {} , restaurant == {} ",name, restaurant);
-        service.update(name,restaurant);
+        service.update(id,restaurant);
             return "OK";
     }
 
-    @DeleteMapping("/{name}")
-    public String deleteByName(@PathVariable String name){
-        log.info("Delete name == {}", name);
-        service.delete(name);
+    @DeleteMapping("/{id}")
+    public String deleteByName(@PathVariable(name = "id") Long id){
+        service.delete(id);
         return "OK";
     }
 }

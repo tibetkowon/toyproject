@@ -1,8 +1,8 @@
 package com.example.toyproject.services.order;
 
-import com.example.toyproject.controller.dto.InsertOrder;
-import com.example.toyproject.model.Order;
-import com.example.toyproject.model.Restaurant;
+import com.example.toyproject.controller.dto.InsertOrderDto;
+import com.example.toyproject.entity.Order;
+import com.example.toyproject.entity.Restaurant;
 import com.example.toyproject.repositories.order.OrderRepository;
 import com.example.toyproject.repositories.restaurant.RestaurantRepository;
 import com.example.toyproject.services.common.BaseServiceImpl;
@@ -23,9 +23,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     }
 
     @Override
-    public void insert(InsertOrder insertOrder) {
-        Restaurant restaurant = restaurantRepository.getById(insertOrder.getRestaurantId());
-        Order order = new Order(insertOrder.getCustomerName(),restaurant);
+    public void insert(InsertOrderDto insertOrderDto) {
+        Restaurant restaurant = restaurantRepository.getById(insertOrderDto.getRestaurantId());
+        Order order = new Order(insertOrderDto.getCustomerName(),restaurant);
 
        repository.save(order);
     }

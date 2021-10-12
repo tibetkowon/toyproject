@@ -41,6 +41,7 @@ public class RestaurantServiceImpl extends BaseServiceImpl<Restaurant> implement
         return repository.findByName(name).orElse(null);
     }
 
+    //TODO : 업데이트 setter -> 생성자
     @Override
     public void update(String name, Restaurant restaurant) {
         Restaurant getData = repository.findByName(name).orElse(new Restaurant());

@@ -8,15 +8,15 @@ import java.util.Optional;
 
 public interface RestaurantService extends BaseService<Restaurant> {
 
-    public void insert(Restaurant restaurant);
+    void insert(Restaurant restaurant);
 
-    public List<Restaurant> selectAll();
+    List<Restaurant> selectAll();
 
-    public Restaurant selectOne(Long id);
+    Restaurant selectOne(Long id);
 
-    public Restaurant selectOne(String name);
+    Restaurant selectOne(String name);
 
-    public void update(String name, Restaurant restaurant);
+    void update(String name, Restaurant restaurant);
 
-    public void delete(String name);
+    void delete(String name);
 }

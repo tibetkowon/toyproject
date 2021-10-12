@@ -1,10 +1,11 @@
 package com.example.toyproject.controller;
 
 import com.example.toyproject.model.Order;
-import com.example.toyproject.model.Restaurant;
+import com.example.toyproject.controller.dto.InsertOrder;
 import com.example.toyproject.services.order.OrderService;
 import com.example.toyproject.services.restaurant.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,11 +24,12 @@ public class OrderController {
     }
 
     @PostMapping
-    public String insert(@RequestBody Order order){
+    @SuppressWarnings("rawtypes")
+    public ResponseEntity insert(@RequestBody InsertOrder order){
         log.info("Order Insert!!!!");
         log.info("order == {}", order);
         service.insert(order);
-        return "OK";
+        return ResponseEntity.ok();
     }
 
     @GetMapping

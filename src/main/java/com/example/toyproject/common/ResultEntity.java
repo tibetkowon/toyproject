@@ -20,11 +20,6 @@ public class ResultEntity<T> {
         this.data = data;
     }
 
-    public ResultEntity(String code, String message) {
-        this.code = code;
-        this.message = message;
-    }
-
     public ResultEntity(ResponseCode responseCode){
         this.code = responseCode.getCode();
         this.message = responseCode.getMessage();

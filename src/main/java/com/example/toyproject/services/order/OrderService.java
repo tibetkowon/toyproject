@@ -1,16 +1,17 @@
 package com.example.toyproject.services.order;
 
-import com.example.toyproject.controller.dto.InsertOrderDto;
+import com.example.toyproject.common.ResultEntity;
+import com.example.toyproject.controller.dto.InsertOrder;
 import com.example.toyproject.entity.Order;
 import com.example.toyproject.services.common.BaseService;
 import java.util.List;
 
 public interface OrderService extends BaseService<Order> {
-    void insert(InsertOrderDto insertOrderDto);
+    ResultEntity<Order> insert(InsertOrder insertOrder);
 
-    void delete(Long id);
+    ResultEntity<Order> delete(Long id);
 
-    Order selectOne(Long id);
+    ResultEntity<List<Order>> selectByRestaurantId(Long id);
 
-    List<Order> selectAll();
+    ResultEntity<List<Order>> selectAll();
 }

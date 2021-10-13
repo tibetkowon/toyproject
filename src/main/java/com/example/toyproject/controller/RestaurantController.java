@@ -35,7 +35,7 @@ public class RestaurantController {
 
     @GetMapping("/{id}")
     public ResultEntity<Restaurant> selectOne(@PathVariable(name = "id") Long id){
-        log.info("Restaurant selectAll start -----");
+        log.info("Restaurant selectOne start -----");
         return service.selectOne(id);
     }
 

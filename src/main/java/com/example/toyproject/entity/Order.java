@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Getter
 @NoArgsConstructor
@@ -21,7 +20,6 @@ import lombok.NonNull;
 //@Where(clause = "IS_DEL='N'")
 public class Order extends BaseEntity {
 
-    @NonNull
     @Column(name = "CUSTOMER_NAME")
     private String customerName;
 

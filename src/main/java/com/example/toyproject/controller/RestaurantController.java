@@ -2,13 +2,20 @@ package com.example.toyproject.controller;
 
 import com.example.toyproject.common.ResponseCode;
 import com.example.toyproject.common.ResultEntity;
+import com.example.toyproject.controller.dto.ResultRestaurant;
 import com.example.toyproject.entity.Restaurant;
 import com.example.toyproject.services.restaurant.RestaurantService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -22,9 +29,12 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public ResultEntity<Restaurant> insert(@RequestBody Restaurant restaurant){
+    public ResultEntity<ResultRestaurant> insert(@Valid @RequestBody(required = false) Restaurant restaurant){
         log.info("Restaurant insert start -----");
-        return service.insert(restaurant);
+        if(restaurant == null){
+            return new ResultEntity<>(ResponseCode.REQUEST_NULL);
+        }
+            return service.insert(restaurant);
     }
 
     @GetMapping
@@ -40,14 +50,14 @@ public class RestaurantController {
     }
 
     @PutMapping("/{id}")
-    public ResultEntity<Restaurant> update(@PathVariable(name = "id") Long id,
+    public ResultEntity<ResultRestaurant> update(@PathVariable(name = "id") Long id,
                          @RequestBody Restaurant restaurant){
         log.info("Restaurant update start -----");
         return service.update(id,restaurant);
     }
 
     @DeleteMapping("/{id}")
-    public ResultEntity<Restaurant> delete(@PathVariable(name = "id") Long id){
+    public ResultEntity<ResultRestaurant> delete(@PathVariable(name = "id") Long id){
         log.info("Restaurant delete start -----");
         return service.delete(id);
     }

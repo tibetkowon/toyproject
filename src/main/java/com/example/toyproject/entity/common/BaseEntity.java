@@ -25,7 +25,7 @@ public class BaseEntity {
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
     @Column(name = "IS_DEL", length = 1)
-    private Boolean deleteFlag = false;
+    private boolean deleteFlag;
 
     public void isDel() {
         this.deleteFlag = true;

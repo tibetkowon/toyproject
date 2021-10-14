@@ -2,15 +2,14 @@ package com.example.toyproject.services.restaurant;
 
 import com.example.toyproject.common.ResponseCode;
 import com.example.toyproject.common.ResultEntity;
+import com.example.toyproject.controller.dto.ResultRestaurant;
 import com.example.toyproject.entity.Restaurant;
 import com.example.toyproject.repositories.restaurant.RestaurantRepository;
 import com.example.toyproject.services.common.BaseServiceImpl;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,26 +25,19 @@ public class RestaurantServiceImpl extends BaseServiceImpl<Restaurant> implement
         this.repository = repository;
     }
     @Override
-    public ResultEntity<Restaurant> insert(Restaurant restaurant) {
-        ResultEntity<Restaurant> resultEntity;
-
-        if(restaurant.getName() == null || restaurant.getName().isEmpty()){
-            resultEntity = new ResultEntity<>(ResponseCode.RESTAURANT_NO_NAME);
-        } else if(restaurant.getAddress() == null || restaurant.getAddress().isEmpty()){
-            resultEntity = new ResultEntity<>(ResponseCode.RESTAURANT_NO_ADDRESS);
-        } else if(restaurant.getPhoneNum() == null || restaurant.getPhoneNum().isEmpty()){
-            resultEntity = new ResultEntity<>(ResponseCode.RESTAURANT_NO_PHONE_NUM);
-        } else if(repository.findByName(restaurant.getName()).isPresent()){
-            resultEntity = new ResultEntity<>(ResponseCode.RESTAURANT_PRESENT_NAME);
-        } else {
-            resultEntity = new ResultEntity<>(repository.save(restaurant));
+    public ResultEntity<ResultRestaurant> insert(Restaurant restaurant) {
+        if(repository.existsByName(restaurant.getName())){
+            return new ResultEntity<>(ResponseCode.RESTAURANT_PRESENT_NAME);
         }
-        return resultEntity;
+        ResultRestaurant resultRestaurant = new ResultRestaurant(repository.save(restaurant));
+
+        return new ResultEntity<>(resultRestaurant);
     }
 
     @Override
     public ResultEntity<List<Restaurant>> selectAll() {
-        return new ResultEntity<>(repository.findAll());
+        List<Restaurant> all = repository.findAll();
+        return new ResultEntity<>(all);
     }
 
     @Override
@@ -61,7 +53,7 @@ public class RestaurantServiceImpl extends BaseServiceImpl<Restaurant> implement
 
     @Override
     @Transactional
-    public ResultEntity<Restaurant> update(Long id, Restaurant restaurant) {
+    public ResultEntity<ResultRestaurant> update(Long id, Restaurant restaurant) {
         Optional<Restaurant> optionalRestaurant = repository.findById(id);
 
         if(!optionalRestaurant.isPresent()){
@@ -71,12 +63,12 @@ public class RestaurantServiceImpl extends BaseServiceImpl<Restaurant> implement
         Restaurant getRestaurant = optionalRestaurant.get();
         getRestaurant.modify(restaurant);
 
-        return new ResultEntity<>(getRestaurant);
+        return new ResultEntity<>(new ResultRestaurant(getRestaurant));
     }
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public ResultEntity<Restaurant> delete(Long id) {
+    public ResultEntity<ResultRestaurant> delete(Long id) {
         Optional<Restaurant> optionalRestaurant = repository.findById(id);
 
         if(!optionalRestaurant.isPresent()){
@@ -87,6 +79,6 @@ public class RestaurantServiceImpl extends BaseServiceImpl<Restaurant> implement
         restaurant.isDel();
         //repository.delete(restaurant);
 
-        return new ResultEntity<>(restaurant);
+        return new ResultEntity<>(new ResultRestaurant(restaurant));
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderService {
 
     OrderRepository repository;
@@ -31,7 +32,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     }
 
     @Override
-    @Transactional
     public ResultEntity<ResultOrder> insert(InsertOrder insertOrder) {
         if(insertOrder.getCustomerName() == null || insertOrder.getCustomerName().isEmpty()){
             return new ResultEntity<>(ResponseCode.ORDER_NO_CUSTOMER_NAME);
@@ -57,10 +57,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         }
 
         Order order = optionalOrder.get();
+        ResultOrder resultOrder = new ResultOrder(order);
         order.isDel();
+        repository.flush();
         //repository.delete(order);
 
-        return new ResultEntity<>(new ResultOrder(order));
+        return new ResultEntity<>(resultOrder);
 
 
     }
@@ -84,10 +86,4 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         return new ResultEntity<>(listMap);
     }
 
-    @Override
-    public void test(){
-        Long id = 1L;
-        Optional<Order> order = repository.findById(id);
-        log.info("ResultOrder == {}", new ResultOrder(order.get()));
-    }
 }

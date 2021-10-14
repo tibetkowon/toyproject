@@ -1,6 +1,5 @@
 package com.example.toyproject.controller;
 
-import com.example.toyproject.common.ResponseCode;
 import com.example.toyproject.common.ResultEntity;
 import com.example.toyproject.controller.dto.InsertOrder;
 import com.example.toyproject.controller.dto.ResultOrder;
@@ -55,12 +54,5 @@ public class OrderController {
         log.info("Order delete start -----");
         return service.delete(id);
     }
-
-    @GetMapping("/test")
-    public void test(){
-        log.info(ResponseCode.OK.getKey());
-        service.test();
-    }
-
 
 }

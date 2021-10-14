@@ -17,5 +17,4 @@ public interface OrderService extends BaseService<Order> {
 
     ResultEntity<Map<String, List<ResultOrder>>> selectAll();
 
-    void test();
 }

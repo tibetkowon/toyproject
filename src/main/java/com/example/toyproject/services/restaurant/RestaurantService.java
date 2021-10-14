@@ -10,9 +10,9 @@ public interface RestaurantService extends BaseService<Restaurant> {
 
     ResultEntity<ResultRestaurant> insert(Restaurant restaurant);
 
-    ResultEntity<List<Restaurant>> selectAll();
+    ResultEntity<List<ResultRestaurant>> selectAll();
 
-    ResultEntity<Restaurant> selectOne(Long id);
+    ResultEntity<ResultRestaurant> selectOne(Long id);
 
     ResultEntity<ResultRestaurant> update(Long id, Restaurant restaurant);
 

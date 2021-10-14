@@ -11,13 +11,14 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "TBL_ORDER")
-//@Where(clause = "IS_DEL='N'")
+@Where(clause = "IS_DEL='N'")
 public class Order extends BaseEntity {
 
     @Column(name = "CUSTOMER_NAME")

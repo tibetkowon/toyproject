@@ -38,13 +38,13 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public ResultEntity<List<Restaurant>> selectAll(){
+    public ResultEntity<List<ResultRestaurant>> selectAll(){
         log.info("Restaurant selectAll start -----");
         return service.selectAll();
     }
 
     @GetMapping("/{id}")
-    public ResultEntity<Restaurant> selectOne(@PathVariable(name = "id") Long id){
+    public ResultEntity<ResultRestaurant> selectOne(@PathVariable(name = "id") Long id){
         log.info("Restaurant selectOne start -----");
         return service.selectOne(id);
     }

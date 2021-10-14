@@ -3,11 +3,14 @@ package com.example.toyproject.services.restaurant;
 import com.example.toyproject.common.ResponseCode;
 import com.example.toyproject.common.ResultEntity;
 import com.example.toyproject.controller.dto.ResultRestaurant;
+import com.example.toyproject.entity.Order;
 import com.example.toyproject.entity.Restaurant;
+import com.example.toyproject.repositories.order.OrderRepository;
 import com.example.toyproject.repositories.restaurant.RestaurantRepository;
 import com.example.toyproject.services.common.BaseServiceImpl;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -19,10 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class RestaurantServiceImpl extends BaseServiceImpl<Restaurant> implements RestaurantService {
 
     private RestaurantRepository repository;
+    private OrderRepository orderRepository;
 
-    public RestaurantServiceImpl(RestaurantRepository repository) {
+    public RestaurantServiceImpl(RestaurantRepository repository,OrderRepository orderRepository) {
         super(repository);
         this.repository = repository;
+        this.orderRepository = orderRepository;
     }
     @Override
     public ResultEntity<ResultRestaurant> insert(Restaurant restaurant) {
@@ -35,19 +40,21 @@ public class RestaurantServiceImpl extends BaseServiceImpl<Restaurant> implement
     }
 
     @Override
-    public ResultEntity<List<Restaurant>> selectAll() {
+    public ResultEntity<List<ResultRestaurant>> selectAll() {
         List<Restaurant> all = repository.findAll();
-        return new ResultEntity<>(all);
+        List<ResultRestaurant> restaurants = all.stream()
+            .map(restaurant -> new ResultRestaurant(restaurant)).collect(Collectors.toList());
+        return new ResultEntity<>(restaurants);
     }
 
     @Override
-    public ResultEntity<Restaurant> selectOne(Long id) {
+    public ResultEntity<ResultRestaurant> selectOne(Long id) {
         Optional<Restaurant> optionalRestaurant = repository.findById(id);
 
         if(!optionalRestaurant.isPresent()){
             return new ResultEntity<>(ResponseCode.RESTAURANT_NO_RESTAURANT);
         }
-        return new ResultEntity<>(optionalRestaurant.get());
+        return new ResultEntity<>(new ResultRestaurant(optionalRestaurant.get()));
     }
 
 
@@ -74,6 +81,8 @@ public class RestaurantServiceImpl extends BaseServiceImpl<Restaurant> implement
         if(!optionalRestaurant.isPresent()){
             return new ResultEntity<>(ResponseCode.RESTAURANT_NO_RESTAURANT);
         }
+        List<Order> orders = orderRepository.findByRestaurantId(id);
+        orders.stream().forEach(order -> order.isDel());
 
         Restaurant restaurant = optionalRestaurant.get();
         restaurant.isDel();

@@ -20,15 +20,22 @@ public class ControllerAdvice {
             .get(0)
             .getDefaultMessage();
 
-        log.warn("catch MethodArgumentNotValidException == {}", errorKey);
+        log.error("catch MethodArgumentNotValidException == {}", errorKey);
         ResponseCode responseCode = ResponseCode.valueOf(errorKey);
         return new ResultEntity<>(responseCode);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResultEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException e){
-        log.warn("catch handleHttpMessageNotReadableException == {}", e.getMessage());
+        log.error("catch handleHttpMessageNotReadableException == {}", e.getMessage());
 
         return new ResultEntity<>(ResponseCode.REQUEST_NULL);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResultEntity handleException(Exception e){
+        log.error("catch handleHttpMessageNotReadableException == {}", e.getMessage());
+
+        return new ResultEntity<>(ResponseCode.ERROR);
     }
 }

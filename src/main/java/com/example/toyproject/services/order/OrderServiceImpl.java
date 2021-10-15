@@ -63,6 +63,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
     @Override
     public ResultEntity<List<ResultOrder>> selectByRestaurantId(Long id) {
+        if(!restaurantRepository.existsById(id)){
+            return new ResultEntity<>(ResponseCode.ORDER_ABSENT_RESTAURANT);
+        }
         List<Order> orderList = repository.findByRestaurantId(id);
         List<ResultOrder> resultOrderList = orderList.stream()
             .map(order -> new ResultOrder(order))

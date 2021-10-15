@@ -33,12 +33,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
     @Override
     public ResultEntity<ResultOrder> insert(InsertOrder insertOrder) {
-        if(insertOrder.getCustomerName() == null || insertOrder.getCustomerName().isEmpty()){
-            return new ResultEntity<>(ResponseCode.ORDER_NO_CUSTOMER_NAME);
-        }
-        if(insertOrder.getRestaurantId() == null || insertOrder.getRestaurantId().equals(0L)){
-            return new ResultEntity<>(ResponseCode.ORDER_NO_RESTAURANT);
-        }
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(insertOrder.getRestaurantId());
         if(!optionalRestaurant.isPresent()){
             return new ResultEntity<>(ResponseCode.ORDER_ABSENT_RESTAURANT);

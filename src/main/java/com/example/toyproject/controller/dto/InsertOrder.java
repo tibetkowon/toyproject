@@ -11,5 +11,4 @@ public class InsertOrder {
 
     @NotNull(message = "ORDER_NO_RESTAURANT")
     private Long restaurantId;
-
 }

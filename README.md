@@ -1,6 +1,6 @@
-#간단한 주문 서비스
+# 간단한 주문 서비스
 
-###1. entity
+### 1. entity
 * Restaurant 와 Order 를 만들 때, 각각의 공통점인 id, 생성일, 수정일, 삭제여부 를
 BaseEntity 로 만들어 식당과 주문에 extend.
 * 삭제 시, 실제로 데이터가 삭제되는 것 보다는, 로그성 데이터로 남겨두는 것이 좋다고 생각되어
@@ -71,7 +71,7 @@ BaseEntity 로 만들어 식당과 주문에 extend.
 >     }
 >     ```
 ***
-###2. controller
+### 2. controller
  * Enum으로 응답 코드와 메시지를 만들어, ResultEntity 에 해당 코드와 메시지, 데이터를 response.
 >   * ResultEntity
 >   ```java
@@ -189,7 +189,7 @@ BaseEntity 로 만들어 식당과 주문에 extend.
   * 식당 삭제 : DELETE /order/{주문ID}
   
 ***
-###3. service
+### 3. service
   * 식당 삭제 시, 해당 식당의 주문들 먼저 삭제 후, 식당 삭제
   ```java
      public ResultEntity<ResultRestaurant> delete(Long id) {
@@ -209,7 +209,7 @@ BaseEntity 로 만들어 식당과 주문에 extend.
         }   
   ```
 ***
-###4. repository
+### 4. repository
   * 주문 조회시 fetch join 으로 n+1 방지(?)
   ```java
   public interface OrderRepository extends JpaRepository<Order, Long> {

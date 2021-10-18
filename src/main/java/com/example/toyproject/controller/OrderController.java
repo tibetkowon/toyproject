@@ -1,8 +1,8 @@
 package com.example.toyproject.controller;
 
 import com.example.toyproject.common.ResultEntity;
-import com.example.toyproject.controller.dto.InsertOrder;
-import com.example.toyproject.controller.dto.ResultOrder;
+import com.example.toyproject.controller.dto.order.InsertOrder;
+import com.example.toyproject.controller.dto.order.ResultOrder;
 import com.example.toyproject.services.order.OrderService;
 import com.example.toyproject.services.restaurant.RestaurantService;
 import java.util.List;

@@ -18,6 +18,7 @@ public enum ResponseCode {
     ,ORDER_NO_RESTAURANT("2002","식당 ID 미입력")
     ,ORDER_ABSENT_RESTAURANT("2003", "존재하지 않는 식당 ID")
     ,ORDER_NO_ORDER("2004","존재하지 않는 주문")
+    ,ORDER_NO_MENU("2005","메뉴 미입력")
 
     ,REQUEST_NULL("9001","요청값 없음")
     ,ERROR("9999","error")

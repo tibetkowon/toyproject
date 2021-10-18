@@ -2,7 +2,9 @@ package com.example.toyproject.controller;
 
 import com.example.toyproject.common.ResponseCode;
 import com.example.toyproject.common.ResultEntity;
-import com.example.toyproject.controller.dto.ResultRestaurant;
+import com.example.toyproject.controller.dto.restaurant.InsertRestaurant;
+import com.example.toyproject.controller.dto.restaurant.RestaurantInfo;
+import com.example.toyproject.controller.dto.restaurant.ResultRestaurant;
 import com.example.toyproject.entity.Restaurant;
 import com.example.toyproject.services.restaurant.RestaurantService;
 import java.util.List;
@@ -29,16 +31,16 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public ResultEntity<ResultRestaurant> insert(@Valid @RequestBody(required = false) Restaurant restaurant){
+    public ResultEntity<ResultRestaurant> insert(@Valid @RequestBody(required = false) InsertRestaurant insertRestaurant){
         log.info("Restaurant insert start -----");
-        if(restaurant == null){
+        if(insertRestaurant == null){
             return new ResultEntity<>(ResponseCode.REQUEST_NULL);
         }
-            return service.insert(restaurant);
+            return service.insert(insertRestaurant);
     }
 
     @GetMapping
-    public ResultEntity<List<ResultRestaurant>> selectAll(){
+    public ResultEntity<List<RestaurantInfo>> selectAll(){
         log.info("Restaurant selectAll start -----");
         return service.selectAll();
     }

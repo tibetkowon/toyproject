@@ -1,4 +1,4 @@
-package com.example.toyproject.controller.dto;
+package com.example.toyproject.controller.dto.order;
 
 import com.example.toyproject.entity.Order;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ResultOrder {
     private Long orderId;
     private String customerName;
+    private String orderMenu;
     private String orderTime;
     private String restaurantName;
     private String restaurantPhone;
@@ -20,6 +21,7 @@ public class ResultOrder {
     public ResultOrder(Order order){
         this.orderId = order.getId();
         this.customerName = order.getCustomerName();
+        this.orderMenu = order.getMenu();
         this.orderTime = order.getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:MM:ss"));
         this.restaurantName = order.getRestaurant().getName();
         this.restaurantPhone = order.getRestaurant().getPhoneNum();

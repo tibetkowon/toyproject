@@ -2,13 +2,12 @@ package com.example.toyproject.services.order;
 
 import com.example.toyproject.common.ResponseCode;
 import com.example.toyproject.common.ResultEntity;
-import com.example.toyproject.controller.dto.InsertOrder;
-import com.example.toyproject.controller.dto.ResultOrder;
+import com.example.toyproject.controller.dto.order.InsertOrder;
+import com.example.toyproject.controller.dto.order.ResultOrder;
 import com.example.toyproject.entity.Order;
 import com.example.toyproject.entity.Restaurant;
 import com.example.toyproject.repositories.order.OrderRepository;
 import com.example.toyproject.repositories.restaurant.RestaurantRepository;
-import com.example.toyproject.services.common.BaseServiceImpl;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,30 +18,30 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
-public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderService {
+public class OrderServiceImpl implements OrderService {
 
     OrderRepository repository;
     RestaurantRepository restaurantRepository;
 
     public OrderServiceImpl(OrderRepository repository, RestaurantRepository restaurantRepository) {
-        super(repository);
         this.repository = repository;
         this.restaurantRepository = restaurantRepository;
     }
 
     @Override
+    @Transactional
     public ResultEntity<ResultOrder> insert(InsertOrder insertOrder) {
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(insertOrder.getRestaurantId());
-        if(!optionalRestaurant.isPresent()){
+        if(optionalRestaurant.isEmpty()) {
             return new ResultEntity<>(ResponseCode.ORDER_ABSENT_RESTAURANT);
         }
-        Order order = new Order(insertOrder.getCustomerName(), optionalRestaurant.get());
-        Order save = repository.save(order);
-        return new ResultEntity<>(new ResultOrder(save));
+
+        Order order = new Order(insertOrder, optionalRestaurant.get());
+        return new ResultEntity<>(new ResultOrder(repository.save(order)));
     }
 
     @Override
+    @Transactional
     public ResultEntity<ResultOrder> delete(Long id) {
         Optional<Order> optionalOrder = repository.findById(id);
 
@@ -62,6 +61,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResultEntity<List<ResultOrder>> selectByRestaurantId(Long id) {
         if(!restaurantRepository.existsById(id)){
             return new ResultEntity<>(ResponseCode.ORDER_ABSENT_RESTAURANT);
@@ -74,6 +74,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResultEntity<Map<String, List<ResultOrder>>> selectAll() {
         List<Order> all = repository.findAll();
         List<ResultOrder> collect = all.stream().map(order -> new ResultOrder(order))

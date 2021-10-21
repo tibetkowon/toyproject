@@ -5,7 +5,7 @@ import com.example.toyproject.common.ResultEntity;
 import com.example.toyproject.controller.dto.restaurant.InsertRestaurant;
 import com.example.toyproject.controller.dto.restaurant.RestaurantInfo;
 import com.example.toyproject.controller.dto.restaurant.ResultRestaurant;
-import com.example.toyproject.entity.Restaurant;
+import com.example.toyproject.entity.restaurant.Restaurant;
 import com.example.toyproject.services.restaurant.RestaurantService;
 import java.util.List;
 import javax.validation.Valid;
@@ -46,7 +46,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public ResultEntity<ResultRestaurant> selectOne(@PathVariable(name = "id") Long id){
+    public ResultEntity<RestaurantInfo> selectOne(@PathVariable(name = "id") Long id){
         log.info("Restaurant selectOne start -----");
         return service.selectOne(id);
     }
@@ -63,4 +63,5 @@ public class RestaurantController {
         log.info("Restaurant delete start -----");
         return service.delete(id);
     }
+
 }

@@ -5,8 +5,7 @@ import com.example.toyproject.common.ResultEntity;
 import com.example.toyproject.controller.dto.restaurant.InsertRestaurant;
 import com.example.toyproject.controller.dto.restaurant.RestaurantInfo;
 import com.example.toyproject.controller.dto.restaurant.ResultRestaurant;
-import com.example.toyproject.entity.Order;
-import com.example.toyproject.entity.Restaurant;
+import com.example.toyproject.entity.restaurant.Restaurant;
 import com.example.toyproject.repositories.order.OrderRepository;
 import com.example.toyproject.repositories.restaurant.RestaurantRepository;
 import java.util.List;
@@ -51,13 +50,20 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResultEntity<ResultRestaurant> selectOne(Long id) {
+    public ResultEntity<RestaurantInfo> selectOne(Long id) {
         Optional<Restaurant> optionalRestaurant = repository.findById(id);
 
         if(!optionalRestaurant.isPresent()){
             return new ResultEntity<>(ResponseCode.RESTAURANT_NO_RESTAURANT);
         }
-        return new ResultEntity<>(new ResultRestaurant(optionalRestaurant.get()));
+
+        Restaurant restaurant = optionalRestaurant.get();
+
+        if(restaurant.isDeleteFlag()){
+            return new ResultEntity<>(ResponseCode.RESTAURANT_DEL_RESTAURANT);
+        }
+
+        return new ResultEntity<>(new RestaurantInfo(restaurant));
     }
 
 
@@ -71,8 +77,12 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         Restaurant getRestaurant = optionalRestaurant.get();
-        getRestaurant.modify(restaurant);
 
+        if(restaurant.isDeleteFlag()){
+            return new ResultEntity<>(ResponseCode.RESTAURANT_DEL_RESTAURANT);
+        }
+
+        getRestaurant.modify(restaurant);
         return new ResultEntity<>(new ResultRestaurant(getRestaurant));
     }
 
@@ -84,10 +94,17 @@ public class RestaurantServiceImpl implements RestaurantService {
         if(!optionalRestaurant.isPresent()){
             return new ResultEntity<>(ResponseCode.RESTAURANT_NO_RESTAURANT);
         }
-        List<Order> orders = orderRepository.findByRestaurantId(id);
-        orders.stream().forEach(order -> order.isDel());
 
         Restaurant restaurant = optionalRestaurant.get();
+
+        if(restaurant.isDeleteFlag()){
+            return new ResultEntity<>(ResponseCode.RESTAURANT_DEL_RESTAURANT);
+        }
+
+        if(!restaurant.getOrderList().isEmpty()) {
+            log.info("delete Order Count == {}",orderRepository.deleteByRestaurant(restaurant));
+        }
+
         restaurant.isDel();
         //repository.delete(restaurant);
 

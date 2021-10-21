@@ -1,6 +1,6 @@
 package com.example.toyproject.controller.dto.restaurant;
 
-import com.example.toyproject.entity.Restaurant;
+import com.example.toyproject.entity.restaurant.Restaurant;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

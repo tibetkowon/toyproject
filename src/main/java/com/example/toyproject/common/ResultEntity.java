@@ -20,4 +20,7 @@ public class ResultEntity<T> {
         this.code = responseCode.getCode();
         this.message = responseCode.getMessage();
     }
+
+    public ResultEntity(ResponseCode restaurantDelRestaurant, T deletedRestaurant) {
+    }
 }

@@ -1,6 +1,7 @@
-package com.example.toyproject.entity;
+package com.example.toyproject.entity.order;
 
 import com.example.toyproject.controller.dto.order.InsertOrder;
+import com.example.toyproject.entity.restaurant.Restaurant;
 import com.example.toyproject.entity.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;

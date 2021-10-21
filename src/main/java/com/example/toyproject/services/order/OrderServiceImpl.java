@@ -4,8 +4,8 @@ import com.example.toyproject.common.ResponseCode;
 import com.example.toyproject.common.ResultEntity;
 import com.example.toyproject.controller.dto.order.InsertOrder;
 import com.example.toyproject.controller.dto.order.ResultOrder;
-import com.example.toyproject.entity.Order;
-import com.example.toyproject.entity.Restaurant;
+import com.example.toyproject.entity.order.Order;
+import com.example.toyproject.entity.restaurant.Restaurant;
 import com.example.toyproject.repositories.order.OrderRepository;
 import com.example.toyproject.repositories.restaurant.RestaurantRepository;
 import java.util.List;
@@ -32,11 +32,17 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public ResultEntity<ResultOrder> insert(InsertOrder insertOrder) {
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(insertOrder.getRestaurantId());
-        if(optionalRestaurant.isEmpty()) {
+        if(!optionalRestaurant.isPresent()) {
             return new ResultEntity<>(ResponseCode.ORDER_ABSENT_RESTAURANT);
         }
 
-        Order order = new Order(insertOrder, optionalRestaurant.get());
+        Restaurant restaurant = optionalRestaurant.get();
+
+        if(restaurant.isDeleteFlag()){
+            return new ResultEntity<>(ResponseCode.RESTAURANT_DEL_RESTAURANT);
+        }
+
+        Order order = new Order(insertOrder, restaurant);
         return new ResultEntity<>(new ResultOrder(repository.save(order)));
     }
 
@@ -50,6 +56,11 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Order order = optionalOrder.get();
+
+        if(order.isDeleteFlag()){
+            return new ResultEntity<>(ResponseCode.ORDER_DEL_ORDER);
+        }
+
         ResultOrder resultOrder = new ResultOrder(order);
         order.isDel();
         repository.flush();
@@ -66,6 +77,10 @@ public class OrderServiceImpl implements OrderService {
         if(!restaurantRepository.existsById(id)){
             return new ResultEntity<>(ResponseCode.ORDER_ABSENT_RESTAURANT);
         }
+        if(!restaurantRepository.findById(id).isPresent()){
+            return new ResultEntity<>(ResponseCode.RESTAURANT_DEL_RESTAURANT);
+        }
+
         List<Order> orderList = repository.findByRestaurantId(id);
         List<ResultOrder> resultOrderList = orderList.stream()
             .map(order -> new ResultOrder(order))

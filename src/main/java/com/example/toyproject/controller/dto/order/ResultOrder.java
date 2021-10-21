@@ -1,6 +1,6 @@
 package com.example.toyproject.controller.dto.order;
 
-import com.example.toyproject.entity.Order;
+import com.example.toyproject.entity.order.Order;
 import java.time.format.DateTimeFormatter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,9 +1,11 @@
-package com.example.toyproject.entity;
+package com.example.toyproject.entity.restaurant;
 
 import com.example.toyproject.controller.dto.restaurant.InsertRestaurant;
 import com.example.toyproject.entity.common.BaseEntity;
+import com.example.toyproject.entity.order.Order;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,7 +34,7 @@ public class Restaurant extends BaseEntity {
     @Column(name = "PHONENUM", nullable = false)
     private String phoneNum;
 
-    @OneToMany(targetEntity = Order.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Order.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "RESTAURANT_ID")
     private List<Order> orderList;
 
@@ -52,5 +54,9 @@ public class Restaurant extends BaseEntity {
         if(restaurant.getPhoneNum() != null && !restaurant.getPhoneNum().isEmpty()){
             this.phoneNum = restaurant.getPhoneNum();
         }
+    }
+    public void isDel(){
+        super.isDel();
+        this.name = this.name + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"));
     }
 }
